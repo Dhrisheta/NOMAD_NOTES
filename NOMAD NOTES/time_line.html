@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Timeline</h1>
+        <nav>
+            <ul>
+                <li><a href="FINAL CODE.HTML">Home</a></li>
+                <li><a href="add_location.html">Add Location</a></li>
+                <li><a href="sign.html">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="timeline"></div>
+    </main>
+    <script>
+        const timeline = document.getElementById('timeline');
+        const locations = JSON.parse(localStorage.getItem('locations')) || [];
+
+        locations.forEach(location => {
+            const locationDiv = document.createElement('div');
+            locationDiv.classList.add('timeline-item');
+            locationDiv.innerHTML = `
+                <h3>${location.name}</h3>
+                <p>${location.description}</p>
+                <p><em>Coordinates: ${location.coords.lat}, ${location.coords.lng}</em></p>
+            `;
+            timeline.appendChild(locationDiv);
+        });
+    </script>
+</body>
+</html>

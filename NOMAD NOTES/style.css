@@ -1,0 +1,82 @@
+/* General reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 30%; /* Adjusted width for sidebar */
+    background-image: url('sidebar-background.jpg'); /* Background image for sidebar */
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    color: white;
+    position: relative;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-header img {
+    max-width: 80px;
+    border-radius: 50%;
+}
+
+.sidebar-header h2 {
+    font-size: 24px;
+}
+
+.sidebar-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar-menu ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar-menu ul li a {
+    display: block;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-menu ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Delete button style */
+.delete-button {
+    cursor: pointer;
+    color: #ff6347;
+    border: none;
+    background: none;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.delete-button:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Location</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Custom CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            z-index: 2;
+            position: relative;
+            width: 100%;
+            height: auto;
+            background-size: cover;
+            background-position: center;
+            background-image: url('D:/SEM 5/LAB/FULL STACK LAB/bgmi2.jpg'); /* Replace with your image path */
+        }
+        .sidebar h1 {
+            margin: 0 0 20px;
+            color: white;
+            text-align: center;
+        }
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar nav ul li a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
+        }
+        .sidebar nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        form label {
+            font-weight: bold;
+        }
+        form input[type="text"],
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        form button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button[type="submit"]:hover {
+            background-color: #218838;
+        }
+        #dropbox {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        #dropbox:hover {
+            border-color: #555;
+        }
+        #dropbox .placeholder {
+            color: #999;
+        }
+        @media (min-width: 768px) {
+            .container-fluid {
+                display: flex;
+                flex-direction: row;
+            }
+            .sidebar {
+                width: 30%;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                margin: 0;
+            }
+            .content {
+                margin-left: 30%;
+                width: 70%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="sidebar">
+            <h1>Add Location</h1>
+            <nav>
+                <ul>
+                    <li><a href="FINAL CODE.HTML">Home</a></li>
+                    <li><a href="time_line.html">Timeline</a></li>
+                    <li><a href="sign.html">Sign Out</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="content">
+            <div id="map"></div>
+            <form id="locationForm">
+                <div class="form-group">
+                    <label for="location-name">Location Name:</label>
+                    <input type="text" id="location-name" name="location-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="location-description">Description:</label>
+                    <textarea id="location-description" name="location-description" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Add Location</button>
+            </form>
+            <div id="dropbox">
+                <div class="placeholder">Drag & Drop Images or Videos Here</div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = L.map('map').setView([51.505, -0.09], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            map.locate({ setView: true, maxZoom: 16 });
+
+            function onLocationFound(e) {
+                const radius = e.accuracy / 2;
+                L.marker(e.latlng).addTo(map)
+                    .bindPopup(`You are within ${radius} meters from this point`).openPopup();
+                L.circle(e.latlng, radius).addTo(map);
+            }
+
+            map.on('locationfound', onLocationFound);
+
+            const form = document.getElementById('locationForm');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                addLocation();
+            });
+
+            function addLocation() {
+                const name = document.getElementById("location-name").value;
+                const description = document.getElementById("location-description").value;
+
+                if (name && description) {
+                    const marker = L.marker(map.getCenter()).addTo(map)
+                        .bindPopup(`<b>${name}</b><br>${description}`).openPopup();
+
+                    const locations = JSON.parse(localStorage.getItem('locations')) || [];
+                    const mediaFiles = JSON.parse(localStorage.getItem('mediaFiles')) || [];
+                    const locationData = { name, description, coords: map.getCenter(), media: mediaFiles };
+                    locations.push(locationData);
+                    localStorage.setItem('locations', JSON.stringify(locations));
+
+                    alert("Location added successfully!");
+                    form.reset();
+                    clearMediaFiles();
+                } else {
+                    alert("Please provide both name and description.");
+                }
+            }
+
+            // Drag and Drop functionality
+            const dropbox = document.getElementById('dropbox');
+            dropbox.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                dropbox.classList.add('dragover');
+            });
+            dropbox.addEventListener('dragleave', function () {
+                dropbox.classList.remove('dragover');
+            });
+            dropbox.addEventListener('drop', function (e) {
+                e.preventDefault();
+                dropbox.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            function handleFiles(files) {
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        // Handle image file
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = file.name;
+                            img.style.maxWidth = '100%';
+                            document.getElementById('timeline').appendChild(img);
+
+                            const mediaFiles = JSON.parse(localStorage.getItem('mediaFiles')) || [];
+                            mediaFiles.push({ type: file.type, url: e.target.result, name: file.name });
+                            localStorage.setItem('mediaFiles', JSON.stringify(mediaFiles));
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (file.type.startsWith('video/')) {
+                        // Handle video file
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const video = document.createElement('video');
+                            video.src = e.target.result;
+                            video.controls = true;
+                            video.style.maxWidth = '100%';
+                            document.getElementById('timeline').appendChild(video);
+
+                            const mediaFiles = JSON.parse(localStorage.getItem('mediaFiles')) || [];
+                            mediaFiles.push({ type: file.type, url: e.target.result, name: file.name });
+                            localStorage.setItem('mediaFiles', JSON.stringify(mediaFiles));
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+
+            function clearMediaFiles() {
+                localStorage.removeItem('mediaFiles');
+                const timeline = document.getElementById('timeline');
+                timeline.innerHTML = ''; // Clear timeline
+            }
+        });
+    </script>
+</body>
+</html>

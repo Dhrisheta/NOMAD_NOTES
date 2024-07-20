@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up and Sign In</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="D:/SEM 5/LAB/FULL STACK LAB/nomadnotes1.jpg" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('D:/SEM 5/LAB/FULL STACK LAB/bgim1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        .header-title {
+            position: absolute;
+            top: 10px; /* Adjusted top position */
+            text-align: center;
+            width: 100%;
+            font-family: 'Raleway', sans-serif;
+            font-size: 36px; /* Adjusted font size */
+            color: white;
+            font-weight: 900;
+            z-index: 1; /* Ensure title is above the container */
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 60%; /* Adjusted width */
+            max-width: 760px; /* Maximum width */
+            margin: 0 auto; /* Center align container */
+            position: relative; /* Ensure position is relative for absolute positioning inside */
+            margin-top: 50px; /* Adjusted margin-top */
+        }
+        .form-container {
+            width: 100%; /* Adjusted width */
+            padding: 20px;
+            margin: 0 auto; /* Center align container */
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff; /* White text color */
+            font-family: 'Raleway', sans-serif; /* Raleway font */
+            font-weight: 900; /* Bold font weight */
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="password"],
+        .form-container input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .toggle-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #00fff2;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .password-visibility-toggle {
+            position: relative;
+            display: inline-block;
+        }
+        .password-visibility-toggle .toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 8px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .password-constraints {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        .password-constraints span {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-title">NOMAD NOTES</div>
+    <div class="container">
+        <!-- Sign Up Form -->
+        <div class="form-container" id="signup-container" style="display: none;">
+            <h2>Sign Up</h2>
+            <div id="signup-error-message" class="error-message"></div>
+            <form id="signupForm">
+                <label for="signup-username">Username</label>
+                <input type="text" id="signup-username" name="signup-username" required>
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" name="signup-email" required>
+                <label for="signup-password">Password</label>
+                <div class="password-visibility-toggle">
+                    <input type="password" id="signup-password" name="signup-password" required>
+                    <span class="toggle-btn" onclick="togglePasswordVisibility('signup-password')">Show</span>
+                </div>
+                <label for="signup-confirm-password">Confirm Password</label>
+                <div class="password-visibility-toggle">
+                    <input type="password" id="signup-confirm-password" name="signup-confirm-password" required>
+                    <span class="toggle-btn" onclick="togglePasswordVisibility('signup-confirm-password')">Show</span>
+                </div>
+                <label for="signup-birthday">Date of Birth</label>
+                <input type="date" id="signup-birthday" name="signup-birthday" required>
+                <div class="password-constraints">
+                    <span>Password must be at least 8 characters long.</span>
+                    <span>Password must contain at least one uppercase letter.</span>
+                    <span>Password must contain at least one lowercase letter.</span>
+                    <span>Password must contain at least one digit.</span>
+                    <span>Password must contain at least one special character.</span>
+                </div>
+                <button type="button" onclick="validateSignUp()">Sign Up</button>
+                <div class="toggle-link" onclick="toggleForms()">Back to Sign In</div>
+            </form>
+        </div>
+
+        <!-- Sign In Form -->
+        <div class="form-container" id="signin-container">
+            <h2>Sign In</h2>
+            <div id="signin-error-message" class="error-message"></div>
+            <form id="signinForm">
+                <label for="signin-username">Username</label>
+                <input type="text" id="signin-username" name="signin-username" required>
+                <label for="signin-password">Password</label>
+                <div class="password-visibility-toggle">
+                    <input type="password" id="signin-password" name="signin-password" required>
+                    <span class="toggle-btn" onclick="togglePasswordVisibility('signin-password')">Show</span>
+                </div>
+                <button type="button" onclick="validateSignIn()">Sign In</button>
+                <div class="toggle-link" onclick="toggleForms()">Don't have an account? Sign Up</div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const signupContainer = document.getElementById("signup-container");
+            const signinContainer = document.getElementById("signin-container");
+            if (signupContainer.style.display === "none") {
+                signupContainer.style.display = "block";
+                signinContainer.style.display = "none";
+            } else {
+                signupContainer.style.display = "none";
+                signinContainer.style.display = "block";
+            }
+        }
+
+        function togglePasswordVisibility(id) {
+            const input = document.getElementById(id);
+            const toggleBtn = input.nextElementSibling;
+            if (input.type === "password") {
+                input.type = "text";
+                toggleBtn.textContent = "Hide";
+            } else {
+                input.type = "password";
+                toggleBtn.textContent = "Show";
+            }
+        }
+
+        function validateSignUp() {
+            const username = document.getElementById("signup-username").value;
+            const email = document.getElementById("signup-email").value;
+            const password = document.getElementById("signup-password").value;
+            const confirmPassword = document.getElementById("signup-confirm-password").value;
+            const birthday = document.getElementById("signup-birthday").value;
+            const errorMessage = document.getElementById("signup-error-message");
+
+            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+            if (!password.match(passwordPattern)) {
+                errorMessage.textContent = "Password does not meet the required criteria.";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match.";
+                return;
+            }
+
+            // Clear any previous error messages
+            errorMessage.textContent = "";
+
+            // Save user data (for demonstration purposes, this is only stored in localStorage)
+            const userData = {
+                username: username,
+                email: email,
+                password: password,
+                birthday: birthday
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            alert("Sign up successful! You can now sign in.");
+            document.getElementById("signupForm").reset();
+            toggleForms(); // Switch to Sign In form after successful sign up
+        }
+
+        function validateSignIn() {
+            const username = document.getElementById("signin-username").value;
+            const password = document.getElementById("signin-password").value;
+            const errorMessage = document.getElementById("signin-error-message");
+
+            // Retrieve user data from localStorage
+            const storedUserData = JSON.parse(localStorage.getItem('userData'));
+
+            if (!storedUserData || storedUserData.username !== username || storedUserData.password !== password) {
+                errorMessage.textContent = "Invalid username or password.";
+                return;
+            }
+
+            // Clear any previous error messages
+            errorMessage.textContent = "";
+
+            alert("Sign in successful!");
+            // Redirect to the home page after successful login
+            window.location.href = "FINAL CODE.HTML";
+        }
+    </script>
+</body>
+</html>
